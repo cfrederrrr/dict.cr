@@ -1,4 +1,6 @@
 class Dict(D)
+  class MissingEntry < Exception end
+
   getter entries = [] of Entry(D)
 
   def initialize
@@ -49,6 +51,7 @@ class Dict(D)
   # Retrieves a definition (`D`) from the entries
   def lookup(word : String) : D
     idx = index(word)
+    raise MissingEntry.new("undefined word `#{word}'") unless idx
     return @entries[idx].definition
   end
 
@@ -60,11 +63,9 @@ class Dict(D)
   # Uses binary search to locate the index of `word`, if it is present.
   # Otherwise returns nil
   private def index(word : String) : Int32?
-    low, high = 0,  @entries.size
-    return nil if low == high
-    mid = high / 2
+    low, high = 0, @entries.size - 1
 
-    while low <= high
+    while low < high
       mid = low + (high - low) / 2
       entry_word = @entries[mid].word
       if entry_word == word
@@ -75,33 +76,30 @@ class Dict(D)
         high = mid - 1
       end
     end
+
+    # if we escape the while loop, and low is the same as high
+    # check if that index of `@entries` matches `word`
+    # return low (or high) if it's a match
+    return low if low == high && @entries[low].word == word
   end
 
   # Uses binary search to locate the index where `word` should
   # be inserted so that the `@entries` is always sorted
   private def insertion_index(word : String) : Int32?
-    high = @entries.size - 1
-    low = 0
+    low, high = 0, @entries.size - 1
 
     while low < high
       mid = low + (high - low) / 2
       entry_word = @entries[mid].word
-
-      case
-      when entry_word == word
+      if entry_word == word
         return mid
-      when entry_word < word
+      elsif entry_word < word
         low = mid + 1
-        if @entries[low] > word
-          return low
-        end
-      else # entry_word > word
+        return low if @entries[low] > word
+      else
         high = mid - 1
-        if high == -1
-          return 0
-        elsif @entries[high] < word
-          return mid
-        end
+        return 0 if high == - 1
+        return mid if @entries[high] < word
       end
     end
 
