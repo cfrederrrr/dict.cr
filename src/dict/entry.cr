@@ -1,18 +1,13 @@
-class Dict::Entry(D)
-  include Comparable(Entry(D))
-  include Comparable(String)
+struct Dict::Entry(W, D)
+  include Comparable(Entry(W, D))
 
-  getter word : String
+  getter word : W
   property definition : D
 
-  def initialize(@word : String, @definition : D)
+  def initialize(@word : W, @definition : D)
   end
 
   def <=>(other : Entry(D))
     @word <=> other.word
-  end
-
-  def <=>(other : String)
-    @word <=> other
   end
 end
