@@ -14,91 +14,91 @@ class Dict(W, D)
   end
 
   protected def entries
-   @entries
+    @entries
   end
 
   # See `#define`
   def []=(word : W, definition : D)
-   define(word, definition)
+    define(word, definition)
   end
 
   # See `#lookup`
   def [](word : W)
-   lookup(word)
+    lookup(word)
   end
 
   # See `#lookup?`
   def []?(word : W)
-   lookop?(word)
+    lookop?(word)
   end
 
   # Rounds up all the definitions and returns them as an array
   def definitions : Array(D)
-   @entries.map &.definition
+    @entries.map &.definition
   end
 
   # Rounds up all the words and returns them as an array
   def words : Array(W)
-   @entries.map &.word
+    @entries.map &.word
   end
 
   # Inserts a word to the dictionary for later `#lookup`
   def define(word : W, definition : D) : D
-   idx = insertion_index(word)
+    idx = insertion_index(word)
 
-   entry = Entry(W,D).new word, definition
+    entry = Entry(W,D).new word, definition
 
-   if idx
-     if @entries[idx].word == word
-       @entries[idx] = entry
-       return definition
-     else
-       @entries.insert idx, entry
-       return definition
-     end
-   else
-     @entries.push entry
-     return definition
-   end
+    if idx
+      if @entries[idx].word == word
+        @entries[idx] = entry
+        return definition
+      else
+        @entries.insert idx, entry
+        return definition
+      end
+    else
+      @entries.push entry
+      return definition
+    end
   end
 
   # Retrieves a definition (`D`) from the entries
   def lookup(word : W) : D
-   idx = index(word) || raise MissingEntry.new("undefined word `#{word}'")
-   return @entries[idx].definition
+    idx = index(word) || raise MissingEntry.new("undefined word `#{word}'")
+    return @entries[idx].definition
   end
 
   # Tries to retrieve a definition (`D`) from the entries, or returns `nil`
   def lookup?(word : W) : D?
-   idx = index(word) || return nil
-   return @entries[idx].definition
+    idx = index(word) || return nil
+    return @entries[idx].definition
   end
 
   def includes?(word : W) : Bool
-   !!index(word)
+    !!index(word)
   end
 
   # Uses binary search to locate the index of `word`, if it is present.
   # Otherwise returns nil
   private def index(word : W) : Int32?
-   low, high = 0, @entries.size - 1
+    low, high = 0, @entries.size - 1
 
-   while low < high
-     mid = low + ((high - low) >> 1)
-     midword = @entries[mid].word
-     if midword == word
-       return mid
-     elsif midword < word
-       low = mid + 1
-     else
-       high = mid - 1
-     end
-   end
+    while low < high
+      mid = low + ((high - low) >> 1)
+      midword = @entries[mid].word
+      if midword == word
+        return mid
+      elsif midword < word
+        low = mid + 1
+      else
+        high = mid - 1
+      end
+    end
 
-   # if we escape the while loop, and low is the same as high
-   # check if that index of `@entries` matches `word`
-   # return low (or high) if it's a match
-   return low if low == high && @entries[low].word == word
+    # if we escape the while loop, and low is the same as high
+    # check if that index of `@entries` matches `word`
+    # return low (or high) if it's a match
+    return low if low == high && @entries[low].word == word
   end
 
   # Uses binary search to locate the index where `word` should
@@ -130,3 +130,4 @@ class Dict(W, D)
 end
 
 require "./dict/entry"
+require "./dict/version"

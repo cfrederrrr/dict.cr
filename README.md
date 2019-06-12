@@ -54,10 +54,6 @@ seven thousand = 7000
 something = nothing
 ```
 
-## Development
-
-TODO: Write development instructions here
-
 ## Contributing
 
 1. Fork it (<https://github.com/galvertez/dict.cr/fork>)
