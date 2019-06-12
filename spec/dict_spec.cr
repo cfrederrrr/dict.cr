@@ -51,7 +51,7 @@ describe Dict do
       dict["nothing"].should eq("nothing else")
     end
 
-    if "overwrites existing values" do
+    it "overwrites existing values" do
       dict["something"] = "abcdefghijklmnopqrstuvwxyz"
       dict["something"].should eq("abcdefghijklmnopqrstuvwxyz")
     end
