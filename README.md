@@ -1,4 +1,6 @@
-# Dict(W,D)
+# Dict
+
+[![Build Status](https://travis-ci.org/galvertez/dict.cr.svg?branch=master)](https://travis-ci.org/galvertez/dict.cr)
 
 Dict is a hash-like type for crystal-lang. It uses binary search for lookups and insertion to ensure that the entries are always sorted. This means its performance on either of those operations will often be slightly worse than `Hash(K,V)`. That being said, insertion of a scrambled array of 100,000 `Int32` takes only half a second on my local machine, so it's still not too bad - I guess you just can't make crystal slow. However, inserting a scrambled array of 1,000,000 `Int32` took nearly 85 seconds for `Dict` but took only half a second for `Hash`, so there is almost certainly some opportunity for optimization there - maybe you can make crystal slow after all. Lookups on the same data set was almost the same for both.
 
@@ -39,6 +41,8 @@ dict = Dict{
 alpha = dict["alpha"] # => "beta"
 ```
 
+For example, a script like
+
 ```crystal
 dict.each do |word, definition|
   printf "#{word} = #{definition}\n"
@@ -53,6 +57,15 @@ eleven = 11
 seven thousand = 7000
 something = nothing
 ```
+
+If you like, you can use the english syntax, rather than `[]` and `[]=`
+
+```crystal
+dict.define "alpha", "beta"
+dict.lookup "alpha" # => "beta"
+```
+
+As it currently stands, `Dict(W,D)` will likely not work properly with union types as the word (`W`), but should work just fine with union type definitions (`D`), because of how heavily it relies on `Comparable(T)`
 
 ## Contributing
 
