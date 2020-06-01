@@ -5,7 +5,7 @@ class Dict(W, D)
   include Enumerable({W,D})
 
   def each
-    @entries.each{ |entry| yield entry.word, entry.definition }
+    @entries.each{ |entry| yield({entry.word, entry.definition}) }
   end
 
   @entries = [] of Entry(W, D)
